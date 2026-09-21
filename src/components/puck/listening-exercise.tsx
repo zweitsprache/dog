@@ -21,6 +21,10 @@ export function ListeningExercise({
 }: ListeningExerciseProps) {
   const groupId = useId();
   const [answers, setAnswers] = useState<Record<number, Answer>>({});
+  const normalizedExerciseNumber = exerciseNumber.trim();
+  const formattedExerciseNumber = /^\d+$/.test(normalizedExerciseNumber)
+    ? normalizedExerciseNumber.padStart(2, "0")
+    : normalizedExerciseNumber;
 
   function selectAnswer(index: number, answer: Answer) {
     setAnswers((current) => ({ ...current, [index]: answer }));
@@ -29,7 +33,9 @@ export function ListeningExercise({
   return (
     <section className="listening-exercise">
       <header className="listening-exercise__header">
-        <span className="listening-exercise__number">{exerciseNumber}</span>
+        <span className="listening-exercise__number">
+          {formattedExerciseNumber}
+        </span>
         <h2>{instruction}</h2>
       </header>
 
@@ -44,7 +50,7 @@ export function ListeningExercise({
             <fieldset className="listening-exercise__row" key={index}>
               <legend className="sr-only">{statement.text}</legend>
               <span className="listening-exercise__row-number">
-                {index + 1}.
+                {String(index + 1).padStart(2, "0")}.
               </span>
               <p>{statement.text}</p>
               <label>

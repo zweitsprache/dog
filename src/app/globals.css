@@ -129,34 +129,63 @@
   }
 }
 
-[data-puck-preview-mode="edit"] {
+[data-puck-entry] {
   font-family: var(--font-encode-sans-semi-condensed), sans-serif;
 }
 
+.puck-document,
+[data-puck-entry] {
+  --puck-block-gap: calc(clamp(1.5225rem, 3.19vw, 2.175rem) + 1rem + 1px);
+  margin-inline: clamp(1.5rem, 7vw, 7rem);
+  padding-top: clamp(1.5rem, 7vw, 7rem);
+}
+
+.puck-document > div > * + *,
+[data-puck-entry][data-puck-preview-mode="interactive"] > div > * + * {
+  margin-top: var(--puck-block-gap);
+}
+
+[data-puck-entry][data-puck-preview-mode="edit"]
+  > div
+  > [data-puck-component]:not(:last-child) {
+  padding-bottom: var(--puck-block-gap);
+}
+
 .listening-exercise {
+  --listening-exercise-padding: clamp(1rem, 5vw, 3.5rem);
+  --listening-item-gap: 0.75rem;
+  --listening-item-number-width: 2.5rem;
   width: 100%;
   overflow: hidden;
-  background: #fbfaf5;
   color: #343c3d;
   border-block: 1px solid #9aa9a8;
 }
 
 .listening-exercise__header {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  gap: clamp(0.75rem, 2vw, 1.5rem);
-  min-height: 5.5rem;
-  padding: 1.25rem clamp(1rem, 5vw, 3.5rem);
+  grid-template-columns: 2rem minmax(0, 1fr);
+  align-items: start;
+  gap: calc(var(--listening-item-number-width) + var(--listening-item-gap));
+  padding: 0.5rem var(--listening-exercise-padding);
+  padding-left: 0;
   border-bottom: 1px solid #9aa9a8;
 }
 
 .listening-exercise__number,
 .listening-exercise__header h2 {
-  font-size: clamp(1.25rem, 3vw, 2rem);
+  font-size: clamp(1.05rem, 2.2vw, 1.5rem);
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.45;
   letter-spacing: 0;
+}
+
+.listening-exercise__number,
+.listening-exercise__row-number {
+  font-variant-numeric: tabular-nums;
+}
+
+.listening-exercise__number {
+  width: 2rem;
 }
 
 .listening-exercise__header h2 {
@@ -164,8 +193,11 @@
 }
 
 .listening-exercise__body {
-  padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 8vw, 7rem)
-    clamp(2.5rem, 6vw, 5rem);
+  padding: 1.25rem var(--listening-exercise-padding);
+  padding-right: 0;
+  padding-left: calc(
+    2rem + var(--listening-item-number-width) + var(--listening-item-gap)
+  );
 }
 
 .listening-exercise__table {
@@ -175,15 +207,16 @@
 .listening-exercise__labels,
 .listening-exercise__row {
   display: grid;
-  grid-template-columns: 2.5rem minmax(0, 1fr) 5.5rem 5.5rem;
-  gap: 0.75rem;
+  grid-template-columns: var(--listening-item-number-width) minmax(0, 1fr) 5.5rem 5.5rem;
+  gap: var(--listening-item-gap);
   align-items: center;
 }
 
 .listening-exercise__labels {
-  padding-bottom: 0.6rem;
-  font-size: 1rem;
+  padding: 0.5rem 0 calc(0.5rem + 1px);
+  font-size: clamp(1.05rem, 2.2vw, 1.5rem);
   font-weight: 600;
+  line-height: 1.45;
   text-align: center;
 }
 
@@ -192,10 +225,16 @@
 }
 
 .listening-exercise__row {
+  align-items: start;
   min-width: 0;
   margin: 0;
-  padding: 0.85rem 0;
+  padding: 0.5rem 0;
   border: 0;
+  border-bottom: 1px solid #c9d1d0;
+}
+
+.listening-exercise__row:first-of-type {
+  border-top: 1px solid #c9d1d0;
 }
 
 .listening-exercise__row p {
@@ -206,16 +245,17 @@
 }
 
 .listening-exercise__row-number {
-  align-self: start;
-  padding-top: 0.1rem;
+  padding-left: 0;
   font-size: clamp(1.05rem, 2.2vw, 1.5rem);
-  text-align: right;
+  line-height: 1.45;
+  text-align: left;
 }
 
 .listening-exercise__row label {
+  align-self: center;
   display: grid;
   place-items: center;
-  min-height: 2.75rem;
+  min-height: 2rem;
   cursor: pointer;
 }
 
@@ -231,7 +271,6 @@
   display: grid;
   grid-template-columns: var(--puck-column-template);
   gap: var(--puck-column-gap);
-  padding: var(--puck-column-padding);
 }
 
 .puck-column {
@@ -239,6 +278,11 @@
 }
 
 @media (max-width: 640px) {
+  .listening-exercise {
+    --listening-item-gap: 0.35rem;
+    --listening-item-number-width: 1.75rem;
+  }
+
   .puck-columns--stack {
     grid-template-columns: 1fr;
   }
@@ -247,18 +291,9 @@
     align-items: start;
   }
 
-  .listening-exercise__body {
-    padding-inline: 1rem;
-  }
-
   .listening-exercise__labels,
   .listening-exercise__row {
-    grid-template-columns: 1.75rem minmax(0, 1fr) 3.25rem 3.25rem;
-    gap: 0.35rem;
-  }
-
-  .listening-exercise__labels {
-    font-size: 0.75rem;
+    grid-template-columns: var(--listening-item-number-width) minmax(0, 1fr) 3.25rem 3.25rem;
   }
 
   .listening-exercise__row input {

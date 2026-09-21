@@ -1,12 +1,49 @@
 "use client";
 
-import { Puck, type Data } from "@puckeditor/core";
+import {
+  Button,
+  createUsePuck,
+  Puck,
+  type Data,
+  type Overrides,
+} from "@puckeditor/core";
 import "@puckeditor/core/puck.css";
+import { Eye, Pencil } from "lucide-react";
+import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { config, initialData, type PageComponents } from "@/puck/config";
 
 const storageKey = "puck-page-data";
 const pageEndpoint = "/api/pages/home";
+const usePuck = createUsePuck<typeof config>();
+
+function HeaderActions({ children }: { children: ReactNode }) {
+  const previewMode = usePuck((state) => state.appState.ui.previewMode);
+  const dispatch = usePuck((state) => state.dispatch);
+  const isPreviewing = previewMode === "interactive";
+
+  return (
+    <>
+      <Button
+        icon={isPreviewing ? <Pencil size={14} /> : <Eye size={14} />}
+        onClick={() =>
+          dispatch({
+            type: "setUi",
+            ui: { previewMode: isPreviewing ? "edit" : "interactive" },
+          })
+        }
+        variant="secondary"
+      >
+        {isPreviewing ? "Edit" : "Preview"}
+      </Button>
+      {children}
+    </>
+  );
+}
+
+const overrides: Partial<Overrides<typeof config>> = {
+  headerActions: HeaderActions,
+};
 
 export default function EditorPage() {
   const [data, setData] = useState<Data<PageComponents> | null>(null);
@@ -68,6 +105,7 @@ export default function EditorPage() {
       <Puck
         config={config}
         data={data}
+        overrides={overrides}
         onPublish={async (publishedData) => {
           setSaveError(null);
 

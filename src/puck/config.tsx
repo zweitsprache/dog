@@ -49,7 +49,6 @@ export type PageComponents = {
     column3Width: number;
     column4Width: number;
     gap: number;
-    padding: number;
     mobileBehavior: "stack" | "keep";
     column1: Slot;
     column2: Slot;
@@ -101,7 +100,15 @@ export const config: Config<PageComponents> = {
         level: "h2",
       },
       render: ({ text, level: Level }) => (
-        <Level className="px-8 pt-10 text-4xl font-semibold">{text}</Level>
+        <Level
+          className={
+            Level === "h1"
+              ? "pt-10 pr-8 text-4xl font-extrabold"
+              : "px-8 pt-10 text-4xl font-semibold"
+          }
+        >
+          {text}
+        </Level>
       ),
     },
     Text: {
@@ -181,12 +188,6 @@ export const config: Config<PageComponents> = {
           max: 12,
         },
         gap: { type: "number", label: "Gap (px)", min: 0, max: 96 },
-        padding: {
-          type: "number",
-          label: "Padding (px)",
-          min: 0,
-          max: 128,
-        },
         mobileBehavior: {
           type: "select",
           label: "Mobile layout",
@@ -207,7 +208,6 @@ export const config: Config<PageComponents> = {
         column3Width: 1,
         column4Width: 1,
         gap: 24,
-        padding: 32,
         mobileBehavior: "stack",
         column1: [],
         column2: [],
@@ -221,7 +221,6 @@ export const config: Config<PageComponents> = {
         column3Width,
         column4Width,
         gap,
-        padding,
         mobileBehavior,
         column1: Column1,
         column2: Column2,
@@ -240,7 +239,6 @@ export const config: Config<PageComponents> = {
             .map((width) => `${Math.max(1, width)}fr`)
             .join(" "),
           "--puck-column-gap": `${Math.max(0, gap)}px`,
-          "--puck-column-padding": `${Math.max(0, padding)}px`,
         } as CSSProperties;
 
         return (
